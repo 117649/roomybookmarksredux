@@ -1,0 +1,24 @@
+﻿{
+  "manifest_version": 2,
+  "applications": {
+    "gecko": {
+      "id": "ALone-live@ya.ru",
+      "strict_min_version": "65"
+    }
+  },
+  "icons": {
+	"48": "skin/icon.png",
+	"96": "skin/icon.png"
+  },
+  "name": "Roomy Bookmarks Toolbar redux",
+  "description": "Make your bookmarks bar better. Customise your bookmarks bar using one add-on.",
+  "version": "1.5.4.1",
+  "author": "Someone free",
+  "homepage_url": "https://github.com/p1usminus/roomybookmarksredux",
+  "legacy": {
+	"options": {
+		"page": "chrome://roomybookmarkstoolbar/content/options.xul",
+		"open_in_tab": true
+	}
+  }
+}
