@@ -19,7 +19,8 @@ var progressListener = {
 		if (roomybookmarkstoolbar.autohide) {
 			// This is like a secondary autoHideBookmarksBar function, just for tab switching
 			if (!(aFlags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
-				roomybookmarkstoolbar.hideBookmarksBar(!toolbarVisible);
+				// roomybookmarkstoolbar.hideBookmarksBar(!toolbarVisible);
+				roomybookmarkstoolbar.setVisibly();
 			}
 		}
 	}
@@ -77,11 +78,10 @@ var roomybookmarkstoolbar = {
 	},
 
 	setVisibly: function () {
-		roomybookmarkstoolbar.hideBookmarksBar(!roomybookmarkstoolbar.visible);
+		roomybookmarkstoolbar.hideBookmarksBar(!toolbarVisible);
 	},
 
 	hideHandler: async function () {
-		// var visible = roomybookmarkstoolbar.visible;
 		const hovered = roomybookmarkstoolbar.hovered;
 		const popup = roomybookmarkstoolbar.popup;
 
@@ -91,11 +91,11 @@ var roomybookmarkstoolbar = {
 		this.timeOutHide = null;
 
 		if (!roomybookmarkstoolbar.PersonalToolbar.collapsed && !hovered && !popup) {
-			roomybookmarkstoolbar.visible = false;
+			toolbarVisible = false;
 			this.timeOutHide = setTimeout(roomybookmarkstoolbar.setVisibly, roomybookmarkstoolbar.hideBarTime);
 		} else {
 			if (hovered) {
-				roomybookmarkstoolbar.visible = true;
+				toolbarVisible = true;
 				roomybookmarkstoolbar.setVisibly();
 
 				if (typeof document.getElementById('PlacesToolbar')._placesView == 'undefined') {
@@ -287,7 +287,7 @@ var roomybookmarkstoolbar = {
 				roomybookmarkstoolbar.autohide = true;
 				roomybookmarkstoolbar.popup = false;
 				setTimeout(function () { roomybookmarkstoolbar.PersonalToolbar.collapsed = true; }, 1000);
-				roomybookmarkstoolbar.visible = false;
+				toolbarVisible = false;
 				roomybookmarkstoolbar.toolboxOver = false;
 				roomybookmarkstoolbar.moveListener = false;
 				roomybookmarkstoolbar.hideBarTime = this.branch.getIntPref('autoHideBarTime') * 1000 + 250;
@@ -305,22 +305,6 @@ var roomybookmarkstoolbar = {
 			}
 		}
 	},
-
-	// currently unused - browser handles this now
-	// separatorAdded: function (heightSep) {
-	// 	var heightOrig = heightSep;
-	// 	var bookmarkService = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"].getService(Components.interfaces.nsINavBookmarksService);
-	// 	var bookmarkObserver = {
-	// 		onItemAdded: function (aItemId, aFolder, aIndex) {
-	// 			var tseparator = document.getElementsByTagName("toolbarseparator");
-	// 			for (var i = 0; i < tseparator.length; i++) {
-	// 				tseparator[i].style.height = heightOrig + 'px';
-	// 			}
-	// 		},
-	// 		QueryInterface: ChromeUtils.generateQI([Ci.nsINavBookmarkObserver])
-	// 	}
-	// 	bookmarkService.addObserver(bookmarkObserver, false);
-	// },
 
 	multirow: function (change) {
 		var PlacesToolbar = document.getElementById('PlacesToolbar');
@@ -707,7 +691,7 @@ var roomybookmarkstoolbar = {
 				return false;
 			})) {
 				let colorCSS = '';
-				if (macOS) {		//Mac need gray background fix
+				/* if (macOS) {		//Mac need gray background fix
 					colorCSS +=
 						'#personal-bookmarks toolbarbutton.bookmark-item[rbtid="' + id + '"] > .toolbarbutton-text {' + '\n';
 					if (bacColor != '') colorCSS += ' background-color:' + bacColor + ';' + '\n';
@@ -719,10 +703,10 @@ var roomybookmarkstoolbar = {
 					if (texColor != '') colorCSS += ' color: ' + texColor + ';' + '\n';
 					if (bacColor != '') colorCSS += ' background-color:' + bacColor + ';' + '\n';
 					colorCSS += ' border-radius: 6px;' + '\n' + '}' + '\n';;
-				}
+				} */
 				colorCSS += '#personal-bookmarks toolbarbutton.bookmark-item[rbtid="' + id + '"] {' + '\n';
-				if (texColor != '') colorCSS += ' color: ' + texColor + ';' + '\n';
-				if (bacColor != '') colorCSS += ' background-color:' + bacColor + ';' + '\n';
+				if (texColor != '') colorCSS += ' color: ' + texColor + '!important;' + '\n';
+				if (bacColor != '') colorCSS += ' background-color:' + bacColor + '!important;' + '\n';
 				colorCSS += ' border-radius: 6px;' + '\n' + '}' + '\n';
 				roomybookmarkstoolbarGlobals.colorCSS += colorCSS;
 			}
