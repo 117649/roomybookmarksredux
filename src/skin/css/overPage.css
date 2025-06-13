@@ -1,21 +1,36 @@
 @namespace url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);
 
 @-moz-document url(chrome://browser/content/browser.xhtml) {
-	#navigator-toolbox {
+	#navigator-toolbox:has(#PersonalToolbar:not([collapsed])),
+	#navigator-toolbox:has(#PersonalToolbar[collapsed="false"]) {
 		position: relative;
-		--browser-area-z-index-toolbox: 4;
+	}
+
+	#navigator-toolbox:has(#PersonalToolbar:not([collapsed])) ~ #browser,
+	#navigator-toolbox:has(#PersonalToolbar[collapsed="false"]) ~ #browser {
+		z-index: 0;
 	}
 
 	#PersonalToolbar {
 		position: absolute;
 		top: 100%;
 		width: 100% !important;
-		z-index: 2;
 		border-bottom-color: inherit;
 		border-bottom-left-radius: inherit;
 		border-bottom-right-radius: inherit;
 		border-bottom-style: inherit;
 		border-bottom-width: inherit;
 		border-collapse: inherit;
+	}
+
+	body,:not(body) {
+		--browser-stack-z-index-devtools-splitter: 2;
+		--browser-stack-z-index-dialog-stack: 3;
+		--browser-stack-z-index-rdm-toolbar: 4;
+		--browser-area-z-index-toolbox: 1;
+		--browser-area-z-index-sidebar: 2;
+		--browser-area-z-index-tabbox: 3;
+		--browser-area-z-index-sidebar-splitter: 4;
+		--browser-area-z-index-toolbox-while-animating: 5;
 	}
 }

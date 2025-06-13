@@ -5,10 +5,10 @@ MozXULElement.parseXULToFragment(`
 		insertafter="placesContext_delete"/>
 	<menuitem id="rbtChangeColor"
 		label="&roomybookmarkstoolbar.overlay.rbtChangeColor.label;"
-		oncommand="roomybookmarkstoolbar.openColorMenu()"
 		insertafter="rbtSeparator"/>
 `,["chrome://roomybookmarkstoolbar/locale/overlay.dtd"]),
 document.getElementById('placesContext_delete').nextSibling);
+document.getElementById('rbtChangeColor').addEventListener('command', _ => { roomybookmarkstoolbar.openColorMenu() });
 
 let toolbarVisible; // Save visibility of toolbar before any location changes
 
