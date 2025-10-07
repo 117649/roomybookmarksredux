@@ -19,7 +19,7 @@
 	}	
 
 	@media -moz-pref('extensions.roomybookmarkstoolbar.autoHideBar'){
-		#PersonalToolbar[collapsed="true"] {
+		#PersonalToolbar[collapsed] {
 			visibility: hidden !important;
 		}
 	}
