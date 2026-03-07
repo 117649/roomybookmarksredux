@@ -8,7 +8,7 @@ Please read the tips.
 
 ## Tips ##
 * Browser & version compatibility
-  * Firefox 143+: Soon™
+  * Firefox 143+: It's over
   * Firefox 129-142? and Waterfox G6.6.0+: [latest version](https://github.com/p1usminus/roomybookmarksredux/releases/latest)
   * Firefox 113-128 and Waterfox G6.0-6.5.10: [v1.7.7.7](https://github.com/p1usminus/roomybookmarksredux/releases/tag/v1.7.7.7)
   * Firefox 108-112: [v1.7.6.1](https://github.com/p1usminus/roomybookmarksredux/releases/tag/v1.7.6.1)
