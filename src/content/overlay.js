@@ -207,56 +207,20 @@ var roomybookmarkstoolbar = {
 		var mainPopupSet = document.getElementById("mainPopupSet");
 		var MPSEventHandler = (e) => {if(["customizationui-widget-panel","placesContext"].includes(e.target.id)) this["on" + e.type]();};
 
+		var E, H, P, T = type ? (E = "mouseenter", H = this.onMouseOver, P = "popupshown", void 0) :
+			(E = "mouseleave", H = this.onMouseOutput, P = "popuphidden", autoHideZoneAll && (this.toolboxOver = true), toolbox)
 		if (register) {
-			if (type) {
-				if (autoHideZoneAll) {
-					toolbox.addEventListener("mouseenter", this.onMouseOver, false);
-				} else {
-					PersonalToolbar.addEventListener("mouseenter", this.onMouseOver, false);
-					if (autoHideZoneNav) { try { navBar.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneMenu) { try { toolbarmenubar.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneTab) { try { TabsToolbar.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneButton) { try { rbtlibbutton.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneBackButton) { try { backButton.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneMenuButton) { try { menuButton.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-				}
-				try { mainPopupSet.addEventListener("popupshown", MPSEventHandler, false); } catch (e) { }
-			} else {
-				try { toolbox.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { }
-				if (!autoHideZoneAll) {
-					PersonalToolbar.addEventListener("mouseleave", this.onMouseOutput, false);
-					if (autoHideZoneNav) { try { navBar.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneMenu) { try { toolbarmenubar.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneTab) { try { TabsToolbar.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneButton) { try { rbtlibbutton.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneBackButton) { try { backButton.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneMenuButton) { try { menuButton.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-				} else roomybookmarkstoolbar.toolboxOver = true;
-				try { mainPopupSet.addEventListener("popuphidden", MPSEventHandler, false); } catch (e) { }
-			}
+			(autoHideZoneAll ? [toolbox] : [PersonalToolbar, T,
+				autoHideZoneNav			&& navBar || void 0,		autoHideZoneMenu		&& toolbarmenubar || void 0,
+				autoHideZoneTab			&& TabsToolbar || void 0,	autoHideZoneButton		&& rbtlibbutton || void 0,
+				autoHideZoneBackButton	&& backButton || void 0,	autoHideZoneMenuButton	&& menuButton || void 0])
+				.forEach(e => e?.addEventListener(E, H, false));
+			try { mainPopupSet.addEventListener(P, MPSEventHandler, false); } catch (e) { }
 		} else {
 			roomybookmarkstoolbar.mouseMoveListenerhandler(false);
-			if (type) {
-				PersonalToolbar.removeEventListener("mouseenter", this.onMouseOver, false);
-				try { navBar.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { toolbarmenubar.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { TabsToolbar.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { rbtlibbutton.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { backButton.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { menuButton.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { toolbox.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { mainPopupSet.removeEventListener("popupshown", MPSEventHandler, false); } catch (e) { }
-			} else {
-				PersonalToolbar.removeEventListener("mouseleave", this.onMouseOutput, false);
-				try { navBar.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { toolbarmenubar.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { TabsToolbar.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { rbtlibbutton.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { backButton.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { menuButton.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { toolbox.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { mainPopupSet.removeEventListener("popuphidden", MPSEventHandler, false); } catch (e) { }
-			}
+			[toolbox, PersonalToolbar, navBar, toolbarmenubar, TabsToolbar, rbtlibbutton, backButton, menuButton]
+				.forEach(e => e?.removeEventListener(E, H, false));
+			try { mainPopupSet.removeEventListener(P, MPSEventHandler, false); } catch (e) { }
 		}
 	},
 
