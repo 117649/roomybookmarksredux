@@ -1,4 +1,5 @@
 const { AddonManager } = ChromeUtils.importESModule("resource://gre/modules/AddonManager.sys.mjs");
+const { CustomizableUI } = ChromeUtils.importESModule("moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs");
 
 var Globals = {};
 
@@ -74,11 +75,7 @@ function install(data, reason) {
 function uninstall() { }
 
 async function startup(data, reason) {
-  var temp = {};
-  Services.scriptloader.loadSubScript("chrome://roomybookmarkstoolbar/content/prefs.js", temp, 'UTF-8');
-  delete temp;
-
-  const { CustomizableUI } = ChromeUtils.importESModule("moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs");
+  Services.scriptloader.loadSubScript("chrome://roomybookmarkstoolbar/content/prefs.js", {}, 'UTF-8');
 
   try {
     CustomizableUI.createWidget({
