@@ -190,30 +190,29 @@ var roomybookmarkstoolbar = {
 	},
 
 	eventListenerhandler: function (register, type) {
-		var autoHideZoneAll = this.branch.getBoolPref('autoHideZoneAll');
-		var autoHideZoneTab = this.branch.getBoolPref('autoHideZoneTab');
-		var autoHideZoneNav = this.branch.getBoolPref('autoHideZoneNav');
-		var autoHideZoneMenu = this.branch.getBoolPref('autoHideZoneMenu');
-		var autoHideZoneButton = this.branch.getBoolPref('autoHideZoneButton');
-		var autoHideZoneBackButton = this.branch.getBoolPref('autoHideZoneBackButton');
-		var autoHideZoneMenuButton = this.branch.getBoolPref('autoHideZoneMenuButton');
-		var toolbox = document.getElementById("navigator-toolbox");
-		var toolbarmenubar = document.getElementById("toolbar-menubar");
-		var TabsToolbar = document.getElementById("TabsToolbar");
-		var navBar = document.getElementById("nav-bar");
-		var rbtlibbutton = document.getElementById("rbtlibbutton");
-		var backButton = document.getElementById("back-button");
-		var menuButton = document.getElementById("PanelUI-menu-button");
-		var mainPopupSet = document.getElementById("mainPopupSet");
-		var MPSEventHandler = (e) => {if(["customizationui-widget-panel","placesContext"].includes(e.target.id)) this["on" + e.type]();};
+		let autoHideZoneAll = this.branch.getBoolPref('autoHideZoneAll');
+		let autoHideZoneTab = this.branch.getBoolPref('autoHideZoneTab');
+		let autoHideZoneNav = this.branch.getBoolPref('autoHideZoneNav');
+		let autoHideZoneMenu = this.branch.getBoolPref('autoHideZoneMenu');
+		let autoHideZoneButton = this.branch.getBoolPref('autoHideZoneButton');
+		let autoHideZoneBackButton = this.branch.getBoolPref('autoHideZoneBackButton');
+		let autoHideZoneMenuButton = this.branch.getBoolPref('autoHideZoneMenuButton');
+		let toolbox = document.getElementById("navigator-toolbox");
+		let toolbarmenubar = document.getElementById("toolbar-menubar");
+		let TabsToolbar = document.getElementById("TabsToolbar");
+		let navBar = document.getElementById("nav-bar");
+		let rbtlibbutton = document.getElementById("rbtlibbutton");
+		let backButton = document.getElementById("back-button");
+		let menuButton = document.getElementById("PanelUI-menu-button");
+		let mainPopupSet = document.getElementById("mainPopupSet");
+		let MPSEventHandler = (e) => {if(["customizationui-widget-panel","placesContext"].includes(e.target.id)) this["on" + e.type]();};
 
-		var E, H, P, T = type ? (E = "mouseenter", H = this.onMouseOver, P = "popupshown", void 0) :
+		let E, H, P, T = type ? (E = "mouseenter", H = this.onMouseOver, P = "popupshown", void 0) :
 			(E = "mouseleave", H = this.onMouseOutput, P = "popuphidden", autoHideZoneAll && (this.toolboxOver = true), toolbox)
 		if (register) {
 			(autoHideZoneAll ? [toolbox] : [PersonalToolbar, T,
-				autoHideZoneNav			&& navBar || void 0,		autoHideZoneMenu		&& toolbarmenubar || void 0,
-				autoHideZoneTab			&& TabsToolbar || void 0,	autoHideZoneButton		&& rbtlibbutton || void 0,
-				autoHideZoneBackButton	&& backButton || void 0,	autoHideZoneMenuButton	&& menuButton || void 0])
+				autoHideZoneNav	? navBar : void 0,		autoHideZoneMenu	? toolbarmenubar : void 0,	autoHideZoneBackButton ? backButton : void 0,
+				autoHideZoneTab	? TabsToolbar : void 0,	autoHideZoneButton	? rbtlibbutton : void 0,	autoHideZoneMenuButton ? menuButton : void 0])
 				.forEach(e => e?.addEventListener(E, H, false));
 			try { mainPopupSet.addEventListener(P, MPSEventHandler, false); } catch (e) { }
 		} else {
