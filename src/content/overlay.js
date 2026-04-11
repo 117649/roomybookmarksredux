@@ -5,10 +5,10 @@ MozXULElement.parseXULToFragment(`
 		insertafter="placesContext_delete"/>
 	<menuitem id="rbtChangeColor"
 		label="&roomybookmarkstoolbar.overlay.rbtChangeColor.label;"
-		oncommand="roomybookmarkstoolbar.openColorMenu()"
 		insertafter="rbtSeparator"/>
 `,["chrome://roomybookmarkstoolbar/locale/overlay.dtd"]),
 document.getElementById('placesContext_delete').nextSibling);
+document.getElementById('rbtChangeColor').addEventListener('command', _ => { roomybookmarkstoolbar.openColorMenu() });
 
 let toolbarVisible; // Save visibility of toolbar before any location changes
 
@@ -19,7 +19,6 @@ var progressListener = {
 		if (roomybookmarkstoolbar.autohide) {
 			// This is like a secondary autoHideBookmarksBar function, just for tab switching
 			if (!(aFlags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT)) {
-				// roomybookmarkstoolbar.hideBookmarksBar(!toolbarVisible);
 				roomybookmarkstoolbar.setVisibly();
 			}
 		}
@@ -40,9 +39,6 @@ var roomybookmarkstoolbar = {
 
 	register: function () {
 		this.branch = Services.prefs.getBranch("extensions.roomybookmarkstoolbar.");
-		/* if (!("addObserver" in this.branch)) {
-			this.branch.QueryInterface(Components.interfaces.nsIPrefBranch2);
-		} */
 		this.branch.addObserver("", this, false);
 	},
 
@@ -90,7 +86,7 @@ var roomybookmarkstoolbar = {
 		}
 		this.timeOutHide = null;
 
-		if (!roomybookmarkstoolbar.PersonalToolbar.collapsed && !hovered && !popup) {
+		if (roomybookmarkstoolbar.autohide &&!roomybookmarkstoolbar.PersonalToolbar.collapsed && !hovered && !popup) {
 			toolbarVisible = false;
 			this.timeOutHide = setTimeout(roomybookmarkstoolbar.setVisibly, roomybookmarkstoolbar.hideBarTime);
 		} else {
@@ -108,15 +104,13 @@ var roomybookmarkstoolbar = {
 				if (typeof document.getElementById('PlacesToolbar')._placesView == 'undefined') {
 					await PlacesToolbarHelper._resetView();
 				}
-				//document.getElementById('PlacesToolbar')._placesView._updateNodesVisibilityTimerCallback();
-				document.getElementById('PlacesToolbar')?._placesView.updateNodesVisibility();
+				document.getElementById('PlacesToolbar')?._placesView?.updateNodesVisibility();
 			}
 		}
 	},
 
 	onMouseOver: function (e) {
 		roomybookmarkstoolbar.lastY = null;
-		// var toolbox = document.getElementById("navigator-toolbox");
 
 		if (roomybookmarkstoolbar.autohide) {
 			if (roomybookmarkstoolbar.timeOutHide) {
@@ -128,7 +122,6 @@ var roomybookmarkstoolbar = {
 			roomybookmarkstoolbar.hideHandler();
 		}
 
-		// try { toolbox.removeEventListener("mousemove", roomybookmarkstoolbar.onMouseMove, false); } catch (e) { }
 		roomybookmarkstoolbar.mouseMoveListenerhandler(false);
 	},
 
@@ -139,11 +132,9 @@ var roomybookmarkstoolbar = {
 			if (!roomybookmarkstoolbar.toolboxOver) {
 				var toolbox = document.getElementById("navigator-toolbox");
 
-				// toolbox.addEventListener("mousemove", roomybookmarkstoolbar.onMouseMove, false);
 				roomybookmarkstoolbar.mouseMoveListenerhandler(true);
 
 				if (e.target == toolbox) roomybookmarkstoolbar.timeOutHide = setTimeout(roomybookmarkstoolbar.hideHandler, 100);
-				// else e.stopPropagation ();
 			}
 			else roomybookmarkstoolbar.hideHandler();
 
@@ -152,10 +143,8 @@ var roomybookmarkstoolbar = {
 
 	onMouseMove: function (e) {
 		if (e.target == document.getElementById("PanelUI-button")) return;
-		// var toolbox = document.getElementById("navigator-toolbox");
 
 		if (roomybookmarkstoolbar.PersonalToolbar.collapsed || !roomybookmarkstoolbar.autohide) {
-			// try { toolbox.removeEventListener("mousemove", roomybookmarkstoolbar.onMouseMove, false); } catch (e) { }
 			roomybookmarkstoolbar.mouseMoveListenerhandler(false);
 			roomybookmarkstoolbar.lastY = null;
 			return;
@@ -172,31 +161,21 @@ var roomybookmarkstoolbar = {
 			if (y > roomybookmarkstoolbar.lastY) {
 				roomybookmarkstoolbar.lastY = null;
 				roomybookmarkstoolbar.hideHandler();
-				// try { toolbox.removeEventListener("mousemove", roomybookmarkstoolbar.onMouseMove, false); } catch (e) { }
 				roomybookmarkstoolbar.mouseMoveListenerhandler(false);
 			}
 		}
 		roomybookmarkstoolbar.lastY = y;
 	},
 
-	onPopupshown: function (e) {
+	onpopupshown: function (e) {
 		roomybookmarkstoolbar.popup = true;
 		roomybookmarkstoolbar.hideHandler();
 	},
 
-	onPopuphidden: function (e) {
+	onpopuphidden: function (e) {
 		roomybookmarkstoolbar.popup = false;
 		roomybookmarkstoolbar.hideHandler();
 	},
-
-	// onMouseOverFix: function (e) {		//Fix problem with wrong hide, when enabled menu\nav bar\tabs
-	// 	if (this.timeOutHide) {
-	// 		clearTimeout(this.timeOutHide);
-	// 	}
-	// 	this.timeOutHide = null;
-	// 	roomybookmarkstoolbar.toolboxOver = true;
-	// 	roomybookmarkstoolbar.hideHandler(false, true);
-	// },
 
 	mouseMoveListenerhandler: function (on) {
 		var toolbox = document.getElementById("navigator-toolbox");
@@ -211,77 +190,36 @@ var roomybookmarkstoolbar = {
 	},
 
 	eventListenerhandler: function (register, type) {
-		var autoHideZoneAll = this.branch.getBoolPref('autoHideZoneAll');
-		var autoHideZoneTab = this.branch.getBoolPref('autoHideZoneTab');
-		var autoHideZoneNav = this.branch.getBoolPref('autoHideZoneNav');
-		var autoHideZoneMenu = this.branch.getBoolPref('autoHideZoneMenu');
-		var autoHideZoneButton = this.branch.getBoolPref('autoHideZoneButton');
-		var autoHideZoneBackButton = this.branch.getBoolPref('autoHideZoneBackButton');
-		var autoHideZoneMenuButton = this.branch.getBoolPref('autoHideZoneMenuButton');
-		var toolbox = document.getElementById("navigator-toolbox");
-		var toolbarmenubar = document.getElementById("toolbar-menubar");
-		var TabsToolbar = document.getElementById("TabsToolbar");
-		var navBar = document.getElementById("nav-bar");
-		var rbtlibbutton = document.getElementById("rbtlibbutton");
-		var backButton = document.getElementById("back-button");
-		var menuButton = document.getElementById("PanelUI-menu-button");
-		var barContextMenu = document.getElementById("placesContext");
+		let autoHideZoneAll = this.branch.getBoolPref('autoHideZoneAll');
+		let autoHideZoneTab = this.branch.getBoolPref('autoHideZoneTab');
+		let autoHideZoneNav = this.branch.getBoolPref('autoHideZoneNav');
+		let autoHideZoneMenu = this.branch.getBoolPref('autoHideZoneMenu');
+		let autoHideZoneButton = this.branch.getBoolPref('autoHideZoneButton');
+		let autoHideZoneBackButton = this.branch.getBoolPref('autoHideZoneBackButton');
+		let autoHideZoneMenuButton = this.branch.getBoolPref('autoHideZoneMenuButton');
+		let toolbox = document.getElementById("navigator-toolbox");
+		let toolbarmenubar = document.getElementById("toolbar-menubar");
+		let TabsToolbar = document.getElementById("TabsToolbar");
+		let navBar = document.getElementById("nav-bar");
+		let rbtlibbutton = document.getElementById("rbtlibbutton");
+		let backButton = document.getElementById("back-button");
+		let menuButton = document.getElementById("PanelUI-menu-button");
+		let mainPopupSet = document.getElementById("mainPopupSet");
+		let MPSEventHandler = (e) => {if(["customizationui-widget-panel","placesContext"].includes(e.target.id)) this["on" + e.type]();};
 
+		let E, H, P, T = type ? (E = "mouseenter", H = this.onMouseOver, P = "popupshown", void 0) :
+			(E = "mouseleave", H = this.onMouseOutput, P = "popuphidden", autoHideZoneAll && (this.toolboxOver = true), toolbox)
 		if (register) {
-			if (type) {
-				if (autoHideZoneAll) {
-					toolbox.addEventListener("mouseenter", this.onMouseOver, false);
-					// toolbox.addEventListener("mouseenter", this.onMouseOverFix, false);
-				} else {
-					PersonalToolbar.addEventListener("mouseenter", this.onMouseOver, false);
-					if (autoHideZoneNav) { try { navBar.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneMenu) { try { toolbarmenubar.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneTab) { try { TabsToolbar.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneButton) { try { rbtlibbutton.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneBackButton) { try { backButton.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					if (autoHideZoneMenuButton) { try { menuButton.addEventListener("mouseenter", this.onMouseOver, false); } catch (e) { } }
-					// try { toolbox.addEventListener("mouseenter", this.onMouseOverFix, false);} catch(e) {}
-				}
-				// toolbox.addEventListener("popupshown", this.onPopupshown, false);
-				// toolbox.addEventListener("popuphidden", this.onPopuphidden, false);
-				try { barContextMenu.addEventListener("popupshown", this.onPopupshown, false); } catch (e) { }
-			} else {
-				try { toolbox.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { }
-				if (!autoHideZoneAll) {
-					PersonalToolbar.addEventListener("mouseleave", this.onMouseOutput, false);
-					if (autoHideZoneNav) { try { navBar.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneMenu) { try { toolbarmenubar.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneTab) { try { TabsToolbar.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneButton) { try { rbtlibbutton.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneBackButton) { try { backButton.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-					if (autoHideZoneMenuButton) { try { menuButton.addEventListener("mouseleave", this.onMouseOutput, false); } catch (e) { } }
-				} else roomybookmarkstoolbar.toolboxOver = true;
-				try { barContextMenu.addEventListener("popuphidden", this.onPopuphidden, false); } catch (e) { }
-			}
+			(autoHideZoneAll ? [toolbox] : [PersonalToolbar, T,
+				autoHideZoneNav	? navBar : void 0,		autoHideZoneMenu	? toolbarmenubar : void 0,	autoHideZoneBackButton ? backButton : void 0,
+				autoHideZoneTab	? TabsToolbar : void 0,	autoHideZoneButton	? rbtlibbutton : void 0,	autoHideZoneMenuButton ? menuButton : void 0])
+				.forEach(e => e?.addEventListener(E, H, false));
+			try { mainPopupSet.addEventListener(P, MPSEventHandler, false); } catch (e) { }
 		} else {
-			// toolbox.removeEventListener("mousemove", roomybookmarkstoolbar.onMouseMove, false)
 			roomybookmarkstoolbar.mouseMoveListenerhandler(false);
-			if (type) {
-				PersonalToolbar.removeEventListener("mouseenter", this.onMouseOver, false);
-				try { navBar.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { toolbarmenubar.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { TabsToolbar.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { rbtlibbutton.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { backButton.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { menuButton.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { toolbox.removeEventListener("mouseenter", roomybookmarkstoolbar.onMouseOver, false); } catch (e) { }
-				try { barContextMenu.removeEventListener("popupshown", this.onPopupshown, false); } catch (e) { }
-			} else {
-				PersonalToolbar.removeEventListener("mouseleave", this.onMouseOutput, false);
-				try { navBar.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { toolbarmenubar.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { TabsToolbar.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { rbtlibbutton.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { backButton.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { menuButton.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { toolbox.removeEventListener("mouseleave", roomybookmarkstoolbar.onMouseOutput, false); } catch (e) { }
-				try { barContextMenu.removeEventListener("popuphidden", this.onPopuphidden, false); } catch (e) { }
-			}
+			[toolbox, PersonalToolbar, navBar, toolbarmenubar, TabsToolbar, rbtlibbutton, backButton, menuButton]
+				.forEach(e => e?.removeEventListener(E, H, false));
+			try { mainPopupSet.removeEventListener(P, MPSEventHandler, false); } catch (e) { }
 		}
 	},
 
@@ -442,28 +380,9 @@ var roomybookmarkstoolbar = {
 	},
 
 	BBonNewTab: function () {
-		// var tabContainer = gBrowser.tabContainer;
-
-		// function hideBBonPage() {
-		// 	if (roomybookmarkstoolbar.branch.getBoolPref('BBonNewTab')) {
-		// 		var tabUrl = gBrowser.currentURI.scheme;
-		// 		if (tabUrl == 'about' || tabUrl == 'chrome') {
-		// 			roomybookmarkstoolbar.hideBookmarksBar(false);
-		// 		} else {
-		// 			roomybookmarkstoolbar.PersonalToolbar.collapsed = true;
-		// 		}
-		// 	}
-		// }
-
 		if (this.branch.getBoolPref('BBonNewTab')) {
 			Services.prefs.setCharPref("browser.toolbars.bookmarks.visibility", "newtab");
-			// tabContainer.removeEventListener("TabSelect", hideBBonPage, false);
-			// tabContainer.addEventListener("TabSelect", hideBBonPage, false);
-			// tabContainer.removeEventListener("TabAttrModified", hideBBonPage, false);
-			// tabContainer.addEventListener("TabAttrModified", hideBBonPage, false);
 		} else {
-			// tabContainer.removeEventListener("TabSelect", hideBBonPage, false);
-			// tabContainer.removeEventListener("TabAttrModified", hideBBonPage, false);
 			if (!this.branch.getBoolPref('autoHideBar') && !this.branch.getBoolPref('hideByDefault')) {
 				this.hideBookmarksBar(false);
 				Services.prefs.setCharPref("browser.toolbars.bookmarks.visibility", "always");
