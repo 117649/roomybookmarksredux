@@ -1,6 +1,6 @@
 # Roomy Bookmarks Toolbar redux #
 
-Roomy Bookmarks Toolbar for Waterfox & Firefox Developer Edition (with [userChromeJS](https://github.com/xiaoxiaoflood/firefox-scripts) - _latest files [available from TabMixPlus repo](https://github.com/onemen/TabMixPlus/releases/tag/dev-build)_) - __[download here!](https://github.com/p1usminus/roomybookmarksredux/releases)__
+Roomy Bookmarks Toolbar for Waterfox & Firefox Developer Edition (with [userChromeJS](https://github.com/xiaoxiaoflood/firefox-scripts) - _latest files [available from TabMixPlus repo](https://onemen.github.io/tabmixplus-docs/other/installation)_) - __[download here!](https://github.com/p1usminus/roomybookmarksredux/releases)__
 
 Originally created by [Someone free](https://web.archive.org/web/20191029180906/https://legacycollector.org/firefox-addons/210846/index.html)
 
@@ -8,13 +8,11 @@ Please read the tips.
 
 ## Tips ##
 * Browser & version compatibility
-  * Firefox 143+: It's over
-  * Firefox 129-142? and Waterfox G6.6.0+: [latest version](https://github.com/p1usminus/roomybookmarksredux/releases/latest)
+  * Firefox 143+: [latest version](https://github.com/p1usminus/roomybookmarksredux/releases/latest)
+  * Firefox 129-142 and Waterfox G6.6.0+: [v1.7.7.8](https://github.com/p1usminus/roomybookmarksredux/releases/tag/v1.7.7.8)
   * Firefox 113-128 and Waterfox G6.0-6.5.10: [v1.7.7.7](https://github.com/p1usminus/roomybookmarksredux/releases/tag/v1.7.7.7)
   * Firefox 108-112: [v1.7.6.1](https://github.com/p1usminus/roomybookmarksredux/releases/tag/v1.7.6.1)
   * Firefox 78-107 and Waterfox G4.0.3.1+: [v1.7.5.3](https://github.com/p1usminus/roomybookmarksredux/releases/tag/v1.7.5.3)
-  * Waterfox G3: [v1.7.0.1](https://github.com/p1usminus/roomybookmarksredux/releases/tag/v1.7.0.1)
-  * Waterfox Current (based on Firefox 68): [v1.5.5.1](https://github.com/p1usminus/roomybookmarksredux/releases/tag/v1.5.5.1)
   * Waterfox Classic: [v1.4.17/original](https://web.archive.org/web/20191029180906/https://legacycollector.org/firefox-addons/210846/roomy-bookmarks-toolbar-1.4.17.xpi) (pls update)
   * Pale Moon: Try [Cozy Bookmarks Toolbar](https://addons.palemoon.org/addon/cozy-bookmarks-toolbar/)
 * The fixed height option should be used when the multirow option is selected, otherwise the toolbar will try to stay at single row height.
@@ -23,7 +21,7 @@ Please read the tips.
 - - - -
 
 ## Other notes ##
-* Looking for multiple tab rows? Check out [Paxmod](https://github.com/numirias/paxmod) or [Merci chao's userChrome script](https://github.com/Merci-chao/userChrome.js/blob/main/MultiTabRows%40Merci.chao.uc.js)
+* Looking for multiple tab rows? Check out [Merci chao's userChrome script](https://github.com/Merci-chao/userChrome.js/blob/main/MultiTabRows%40Merci.chao.uc.js) or [Paxmod](https://github.com/numirias/paxmod) (last updated in 2022).
 * :question: I would like to know if users prefer having the option to scroll when using the multirow option. It can be avoided using a combination of the multirow and margin options as above.
   * The single row multirow toolbar is neat.
 * I repurposed one of the prefs to change the top & bottom margin of bookmark items. Adding new prefs looks like it could be annoying, but there may be a couple of other ones that could be re-used.
